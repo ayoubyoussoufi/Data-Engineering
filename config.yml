@@ -1,0 +1,42 @@
+tabs_to_exclude:
+  - 'Total Loreal Lux'
+  - 'Total Loreal Lux brand'
+  - 'Jan'
+  - 'Feb'
+  - 'Mar'
+  - 'Apr'
+  - 'May'
+  - 'June'
+  - 'Jul'
+  - 'Aug'
+  - 'Sep'
+  - 'Okt'
+  - 'Nov'
+  - 'Dec'
+
+tabs_keyword_to_exclude: 
+  - 'Total'
+  - 'ttl'
+  - 'total'
+
+headers_renaming: ## not used yet
+  product_id: "Rækkemærkater"
+  quantity: "Antal"
+  value: "Nettobeløb"
+
+split_parameters:
+  strings_to_match:
+    - "September"
+    - "April"
+    - "Hovedtotal"
+    - "July"
+    - "January"
+    - "October"
+    - "March"
+    - "February"
+    - "August"
+    - "May"
+    - "June"
+    - "December"
+    - "November"
+  column_to_look_into: product_id

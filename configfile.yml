@@ -1,0 +1,62 @@
+new_column_names :
+  Rækkemærkater: 'product_id'
+  Antal: 'quantity_2023'
+  Nettobeløb: 'value_2023'
+  Antal.1: 'quantity_2024'
+  Nettobeløb.1: 'value_2024'
+
+split_parameters:
+  months:
+    - January
+    - February
+    - March
+    - April
+    - May
+    - June
+    - July
+    - August
+    - September
+    - October
+    - November
+    - December
+
+  col_to_use : product_id
+
+  col_to_rename:
+    - product_id
+    - brand
+    - quantity
+    - value
+  col_to_final_result:
+    - product_id
+    - month
+    - brand
+    - year
+    - quantity
+    - value
+  sheet_names:
+    - 'Armani Month'
+    - 'Azzaro'
+    - ' Biotherm month'
+    - 'Cacharel'
+    - 'Diesel '
+    - 'Essie'
+    - 'H. Rubinst'
+    - 'Lancome'
+    - 'LÒreal'
+    - 'Prada'
+    - 'Thierry Mugler'
+    - 'Urban Decay'
+    - 'Valentino'
+    - 'Viktor&Rolf'
+    - 'YSL'
+  col_product_2023:
+    - product_id
+    - brand
+    - quantity_2023
+    - value_2023
+  col_product_2024:
+    - product_id
+    - brand
+    - quantity_2024
+    - value_2024
