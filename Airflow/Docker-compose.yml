@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  airflow-webserver:
+    image: apache/airflow:2.10.1
+    user: root
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      - AIRFLOW__WEBSERVER__WEB_SERVER_HOST=0.0.0.0
+      #- _PIP_ADDITIONAL_REQUIREMENTS=gspread  # Add this line
+    volumes:
+      - ./airflow:/opt/airflow
+      - ftp_volume:/mnt/data/ftp  # Network drive
+      - c_drive:/mnt/c_drive  # Map the entire C drive
+    ports:
+      - "8090:8080"
+    command: webserver
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    restart: always  # Ensure the service restarts
+
+  airflow-scheduler:
+    image: apache/airflow:2.10.1
+    user: root
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+      #- _PIP_ADDITIONAL_REQUIREMENTS=gspread  # Add this line
+    volumes:
+      - ./airflow:/opt/airflow
+      - ftp_volume:/mnt/data/ftp  # Network drive
+      - c_drive:/mnt/c_drive  # Map the entire C drive
+    command: scheduler
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    restart: always  # Ensure the service restarts
+
+  airflow-init:
+    image: apache/airflow:2.10.1
+    user: root
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    volumes:
+      - ./airflow:/opt/airflow
+      - ftp_volume:/mnt/data/ftp  # Network drive
+      - c_drive:/mnt/c_drive  # Map the entire C drive
+    command: bash -c "
+      groupadd -f airflow && 
+      useradd -g airflow airflow || true && 
+      chown -R airflow:airflow /mnt/data/ftp/matrix/ZIGGO/todo && 
+      chmod -R 775 /mnt/data/ftp/matrix/ZIGGO/todo && 
+      sudo chmod -R 755 /mnt/data/ftp/dst/PATHE/MICROSOFT/todo &&
+      chmod -R 755 /mnt/data/ftp/dst/PATHE/MICROSOFT/bkp &&
+      airflow db init && 
+      airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com"
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    restart: on-failure  # Ensure the service restarts
+
+  debug:
+    image: apache/airflow:2.10.1
+    user: root
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__DAGS_FOLDER=/opt/airflow/dags
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    volumes:
+      - ./airflow:/opt/airflow
+      - ftp_volume:/mnt/data/ftp  # Network drive
+      - c_drive:/mnt/c_drive  # Map the entire C drive
+    entrypoint: /bin/bash
+    command: -c "tail -f /dev/null"
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+
+volumes:
+  ftp_volume:
+    driver: local
+    driver_opts:
+      type: cifs
+      o: username=ayoub.youssoufi,password=azerti2024,domain=aqoa,vers=3.0,noperm,sec=ntlmssp
+      device: //10.3.9.4/ftproot
+  c_drive:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: C:/  # Map the entire C drive
