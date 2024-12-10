@@ -1,0 +1,66 @@
+version: '3.7'
+
+x-airflow-common:
+  &airflow-common
+  image: my-airflow-image
+  environment:
+    &airflow-env
+    AIRFLOW__CORE__EXECUTOR: "LocalExecutor"
+    AIRFLOW__CORE__SQL_ALCHEMY_CONN: "mssql+pyodbc://AQOA_Core:AQOA_Core*+628@aqoa-db-test.aqoa.local:1433/AQOA_Core?driver=ODBC+Driver+17+for+SQL+Server"
+    AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__WEBSERVER__WORKERS: 4
+  volumes:
+    - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
+    - ./sql:/opt/airflow/sql
+    - ./output:/opt/airflow/output
+
+services:
+  airflow-init:
+    image: my-airflow-image
+    user: root
+    environment:
+      - AIRFLOW__CORE__EXECUTOR=SequentialExecutor
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=mssql+pyodbc://AQOA_Core:AQOA_Core*+628@aqoa-db-test.aqoa.local:1433/AQOA_Core?driver=ODBC+Driver+17+for+SQL+Server
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    command: airflow db init && airflow users create --username admin --password admin --firstname Admin --lastname User --role Admin --email admin@example.com"
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+    restart: "no"  # Do not restart after initialization
+    depends_on:
+      - sqlserver
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Express"
+      SA_PASSWORD: "YourStrong!Passw0rd"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-db-volume:/var/opt/mssql
+
+  webserver:
+    <<: *airflow-common
+    command: webserver
+    ports:
+      - "8081:8080"
+    depends_on:
+      - sqlserver
+      - airflow-init
+    environment:
+      <<: *airflow-env
+      AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+
+  scheduler:
+    <<: *airflow-common
+    command: scheduler
+    depends_on:
+      - webserver
+      - sqlserver
+
+volumes:
+  sqlserver-db-volume:
