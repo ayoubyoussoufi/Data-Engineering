@@ -1,1 +1,28 @@
+FROM apache/airflow:latest
+
+RUN pip install --user --uprade pip
+RUN pip install --no-cache-dir --user gspread oauth2client imapclient
+# Switch to root user to install system dependencies
+USER root
+
+# Update package manager and install system packages (e.g., git)
+RUN apt-get update && apt-get install -y git && apt-get clean
+
+# Set the correct PYTHONPATH for airflow user
+ENV PATH="/home/airflow/.local/bin:${PATH}"
+
+# Switch to airflow user and install required packages
+USER airflow
+# Install Python packages in the airflow user's environment
+
+
+# Copy your DAGs into the Airflow DAGs directory
+COPY dags/ /opt/airflow/dags/
+
+# Ensure proper permissions for airflow user on DAGs directory
+USER root
+RUN chown -R airflow: /opt/airflow/dags/
+
+# Switch back to airflow user
+USER airflow
 
