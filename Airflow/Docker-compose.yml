@@ -87,7 +87,7 @@ volumes:
     driver: local
     driver_opts:
       type: cifs
-      o: username=ayoub.youssoufi,password=azerti2024,domain=aqoa,vers=3.0,noperm,sec=ntlmssp
+      o: username=ayoub.youssoufi,password=azerti2024,domain=loreal,vers=3.0,noperm,sec=ntlmssp
       device: //10.3.9.4/ftproot
   c_drive:
     driver: local
