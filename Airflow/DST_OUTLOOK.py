@@ -17,8 +17,8 @@ import re
 
 # IMAP server credentials
 IMAP_SERVER = 'imap.ionos.fr'
-IMAP_USER = 'victoria@aqoa.fr'
-IMAP_PASS = 'V@room22'
+IMAP_USER = 'xxxxxxxxxx'
+IMAP_PASS = 'xxxxxxxxx'
 
 
 def extract_week_number(filename):
