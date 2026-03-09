@@ -27,10 +27,10 @@ csv_output_path = '/opt/airflow/output/query_result.csv.gz'  # Output CSV path
 def extract_sql_to_gz():
     # Set up a connection to SQL Server using pyodbc
     conn = pyodbc.connect('DRIVER={ODBC Driver 17 for SQL Server};'
-                          'SERVER=aqoa-db-test.aqoa.local;'
-                          'DATABASE=AQOA_Core;'
-                          'UID=AQOA_Core;'
-                          'PWD=AQOA_Core*+628')
+                          'SERVER=loreal-db-test.loreal.local;'
+                          'DATABASE=loreal_Core;'
+                          'UID=loreal_Core;'
+                          'PWD=loreal_Core*+628')
 
     # Read the SQL query from the file
     with open(sql_file_path, 'r') as sql_file:
@@ -96,9 +96,9 @@ with DAG(
         op_kwargs={
             'smtp_server': 'auth.smtp.1and1.fr',  # Replace with the actual SMTP server
             'smtp_port': 587,  # SMTP port (587 for TLS)
-            'smtp_user': 'ayoub@aqoa.fr',  # Sender email address
+            'smtp_user': 'ayoub@loreal.fr',  # Sender email address
             'smtp_password': 'bawjug-wimJyb-6bamre',  # Email account password
-            'to_email': 'ayoub@aqoa.fr',  # Recipient email address
+            'to_email': 'ayoub@loreal.fr',  # Recipient email address
             'subject': 'Airflow Data Processing Results',  # Email subject
             'body': 'Please find attached the results of the data processing.',  # Email body
             'attachment_path': '/opt/airflow/output/query_result.csv.gz'  # Path to the CSV file
