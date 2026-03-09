@@ -15,7 +15,7 @@ import traceback
 
 # IMAP server credentials
 IMAP_SERVER = 'imap.ionos.fr'
-IMAP_USER = 'victoria@loreal.fr'
+IMAP_USER = 'ayoub@loreal.fr'
 IMAP_PASS = 'V@room22'
 
 
