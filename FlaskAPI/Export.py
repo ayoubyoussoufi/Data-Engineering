@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Define the SQL Server connection string
-conn_str = r'DRIVER={ODBC Driver 17 for SQL Server};SERVER=xxxxxxxx;DATABASE=AQOA_Core;UID=xxxxxx;PWD=xxxxxxx'
+conn_str = r'DRIVER={ODBC Driver 17 for SQL Server};SERVER=xxxxxxxx;DATABASE=loreal_Core;UID=xxxxxx;PWD=xxxxxxx'
 
 
 # Function to test the database connection
